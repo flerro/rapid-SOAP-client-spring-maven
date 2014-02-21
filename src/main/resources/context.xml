@@ -1,0 +1,34 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="resolver" class="sample.wsclient.handler.HandlerChainResolver">
+        <property name="handlerList">
+            <list>
+                <bean class="sample.wsclient.handler.SoapPayloadDumper" />
+            </list>
+        </property>
+    </bean>
+
+    <bean id="numberToWordsService" class="org.springframework.remoting.jaxws.JaxWsPortProxyFactoryBean">
+        <!-- Provide project related configurations -->
+        <property name="serviceInterface" value="com.dataaccess.webservicesserver.NumberConversionSoapType" />
+        <property name="wsdlDocumentUrl" value="classpath:/wsdl/service.wsdl" />
+        <property name="lookupServiceOnStartup" value="false" />
+
+        <!-- Configure service params from the WSDL -->
+        <property name="namespaceUri" value="http://www.dataaccess.com/webservicesserver/" />
+        <property name="serviceName" value="NumberConversion" />
+        <property name="portName" value="NumberConversionSoap"/>
+        <property name="endpointAddress" value="http://www.dataaccess.com/webservicesserver/numberconversion.wso" />
+
+        <!-- Uncomment for HTTP-AUTH -->
+        <!--
+        <property name="username" value="user"/>
+        <property name="password" value="passwrod"/>
+        -->
+
+        <!-- Payload dumper setup -->
+        <property name="handlerResolver" ref="resolver"/>
+    </bean>
+</beans>
